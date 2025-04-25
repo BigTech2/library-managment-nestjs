@@ -9,6 +9,9 @@ import { AuthenModule } from './authen/authen.module';
 import { User } from './user/user.entity';
 import { Role } from './role/role.entity';
 import { RefreshToken } from './refresh-token/refresh-token.entity';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,6 +24,12 @@ import { RefreshToken } from './refresh-token/refresh-token.entity';
       database: 'library_manager_db',
       entities: [User, Role, RefreshToken],
       synchronize: true,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      context: ({ req }: { req: Request }) => ({ req }),
     }),
     UserModule,
     RoleModule,
