@@ -3,10 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from '../user/user.entity';
+
 import { RefreshToken } from '../refresh-token/refresh-token.entity';
 import * as dotenv from 'dotenv';
-import { Role } from 'src/role/role.entity';
+import * as crypto from 'crypto';
+import { Role, RoleName } from 'src/role/role.entity';
+import { User } from 'src/user/entities/user.entity';
 
 dotenv.config();
 @Injectable()
@@ -18,13 +20,47 @@ export class AuthenService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
-    @InjectRepository(RefreshToken)
+    @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
   ) {
     this.jwtSecret = process.env.SECRET_KEY || ''; // Lấy secret từ biến môi trường
     if (!this.jwtSecret) {
       throw new Error('SECRET_KEY is not defined in environment variables');
     }
+  }
+
+  async createUser(
+    email: string,
+    password: string,
+    firstname: string,
+    lastname: string,
+  ) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new Error('Email already exists');
+    }
+    const role = await this.roleRepository.findOne({
+      where: { name: RoleName.USER },
+    });
+
+    if (!role) {
+      throw new Error('Default role not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User();
+    user.email = email;
+
+    user.password = hashedPassword;
+    user.firstname = firstname;
+    user.lastname = lastname;
+    user.role = role;
+    void this.userRepository.save(user);
+    return {
+      email: user.email,
+    };
   }
 
   async generateToken(email: string, password: string) {
@@ -36,7 +72,6 @@ export class AuthenService {
       throw new Error('Invalid email or password');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const isPasswordValid: boolean = await bcrypt.compare(
       password,
       user.password,
@@ -59,11 +94,12 @@ export class AuthenService {
     }
 
     const expiresAt = new Date();
-    expiresAt.setTime(expiresAt.getTime() + 1 * 24 * 60 * 60 * 1000);
-    const refreshToken = this.jwtService.sign(
-      {},
-      { secret: this.jwtSecret, expiresIn: '7h' },
-    );
+    const length = 32; // Define the length variable
+    const refreshToken = crypto
+      .randomBytes(length)
+      .toString('hex')
+      .slice(0, length);
+    expiresAt.setHours(expiresAt.getHours() + 24);
 
     await this.refreshTokenRepository.save({
       token: refreshToken,
@@ -104,6 +140,7 @@ export class AuthenService {
   async refreshAccessToken(token: string) {
     const refreshToken = await this.refreshTokenRepository.findOne({
       where: { token: token },
+      relations: ['user'],
     });
     if (!refreshToken) {
       throw new Error('Invalid refresh token');
@@ -113,9 +150,13 @@ export class AuthenService {
     if (refreshToken.expiresAt < now) {
       throw new Error('Refresh token expired');
     }
+    console.log(refreshToken);
+
+    const userId = refreshToken.user.id;
+    console.log(userId);
 
     const user = await this.userRepository.findOne({
-      where: { id: refreshToken.user.id },
+      where: { id: userId },
       relations: ['role'],
     });
     if (!user) {

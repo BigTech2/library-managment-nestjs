@@ -5,22 +5,35 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
-import { AuthenModule } from './authen/authen.module';
-import { User } from './user/user.entity';
+import { AuthenModule } from './auth/authen.module';
 import { Role } from './role/role.entity';
 import { RefreshToken } from './refresh-token/refresh-token.entity';
+import { ConfigModule } from '@nestjs/config';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'hoangdeptrai',
-      database: 'library_manager_db',
+      type: process.env.DB_TYPE as 'mysql',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '3306', 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
       entities: [User, Role, RefreshToken],
-      synchronize: true,
+      synchronize: process.env.DB_SYNCHRONIZE === 'true',
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      context: ({ req }: { req: Request }) => ({ req }),
     }),
     UserModule,
     RoleModule,
