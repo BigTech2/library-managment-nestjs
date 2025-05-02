@@ -1,0 +1,29 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthPayload {
+  data: JSON
+  message: String!
+}
+
+type AuthRegisterDto {
+  data: JSON
+  message: String
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Mutation {
+  Logout(refreshToken: String!): AuthPayload!
+  Regsiter(email: String!, firstname: String!, lastname: String!, password: String!): AuthRegisterDto!
+  generatetoken(email: String!, password: String!): AuthPayload!
+  refreshAccessToken(refreshToken: String!): AuthPayload!
+}
+
+type Query {
+  hello: String!
+}

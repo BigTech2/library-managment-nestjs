@@ -10,6 +10,9 @@ import { User } from './user/user.entity';
 import { Role } from './role/role.entity';
 import { RefreshToken } from './refresh-token/refresh-token.entity';
 import { ConfigModule } from '@nestjs/config';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,6 +28,12 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DB_DATABASE,
       entities: [User, Role, RefreshToken],
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      context: ({ req }: { req: Request }) => ({ req }),
     }),
     UserModule,
     RoleModule,
