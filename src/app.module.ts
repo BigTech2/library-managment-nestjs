@@ -9,18 +9,22 @@ import { AuthenModule } from './authen/authen.module';
 import { User } from './user/user.entity';
 import { Role } from './role/role.entity';
 import { RefreshToken } from './refresh-token/refresh-token.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'hoangdeptrai',
-      database: 'library_manager_db',
+      type: process.env.DB_TYPE as 'mysql',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '3306', 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
       entities: [User, Role, RefreshToken],
-      synchronize: true,
+      synchronize: process.env.DB_SYNCHRONIZE === 'true',
     }),
     UserModule,
     RoleModule,
