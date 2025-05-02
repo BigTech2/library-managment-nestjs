@@ -4,11 +4,12 @@ import { AuthenController } from './authen.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RefreshToken } from 'src/refresh-token/refresh-token.entity';
-import { User } from 'src/user/user.entity';
+
 import { Role } from 'src/role/role.entity';
 import { AuthenResolver } from './authen.resolver';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [

@@ -3,11 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from '../user/user.entity';
+
 import { RefreshToken } from '../refresh-token/refresh-token.entity';
 import * as dotenv from 'dotenv';
 import * as crypto from 'crypto';
 import { Role, RoleName } from 'src/role/role.entity';
+import { User } from 'src/user/entities/user.entity';
 
 dotenv.config();
 @Injectable()

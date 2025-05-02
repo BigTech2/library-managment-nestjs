@@ -1,5 +1,6 @@
+import { User } from 'src/user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { User } from '../user/user.entity';
+
 import { OneToMany } from 'typeorm';
 
 export enum RoleName {

@@ -12,7 +12,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     if (!request) {
       throw new Error('Request not found');
     }
-
     return request;
   }
 }

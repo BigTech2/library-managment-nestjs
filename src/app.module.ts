@@ -5,14 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
-import { AuthenModule } from './authen/authen.module';
-import { User } from './user/user.entity';
+import { AuthenModule } from './auth/authen.module';
 import { Role } from './role/role.entity';
 import { RefreshToken } from './refresh-token/refresh-token.entity';
 import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [

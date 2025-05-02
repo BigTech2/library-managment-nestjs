@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Role } from '../role/role.entity';
-import { RefreshToken } from '../refresh-token/refresh-token.entity';
 import { ManyToOne } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Role } from 'src/role/role.entity';
+import { RefreshToken } from 'src/refresh-token/refresh-token.entity';
 
 @ObjectType()
 @Entity('users')

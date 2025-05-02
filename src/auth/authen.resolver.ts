@@ -1,10 +1,10 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthenService } from './authen.service';
-import { AuthPayload } from './auth-payload.dto';
-import { AuthRegisterDto } from './auth-register.dto';
+import { AuthPayload } from './dto/auth-payload.dto';
+import { AuthRegisterDto } from './dto/auth-register.dto';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from './auth.guard';
-import { RoleGuard } from './role.guard';
+import { GqlAuthGuard } from './guard/auth.guard';
+import { RoleGuard } from './guard/role.guard';
 import { role } from './role.decorator';
 
 @Resolver()
@@ -15,6 +15,7 @@ export class AuthenResolver {
   @role('ADMIN')
   @Query(() => String)
   hello() {
+
     return 'Hello world';
   }
 
