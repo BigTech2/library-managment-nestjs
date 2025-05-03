@@ -26,6 +26,7 @@ export class BooksResolver {
   }
 
   @Query(() => [Book], { name: 'books' })
+
   findAll() {
     return this.booksService.findAll();
   }
@@ -44,11 +45,15 @@ export class BooksResolver {
   }
 
   @Mutation(() => Book)
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @role('ADMIN')
   updateBook(@Args('updateBookInput') updateBookInput: UpdateBookInput) {
     return this.booksService.update(updateBookInput);
   }
 
   @Mutation(() => Book)
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @role('ADMIN')
   removeBook(@Args('id', { type: () => Int }) id: number) {
     return this.booksService.remove(id);
   }
