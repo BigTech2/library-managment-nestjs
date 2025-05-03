@@ -13,8 +13,25 @@ type AuthRegisterDto {
 }
 
 type Book {
-  """Book unique identifier"""
+  author: String!
+  bookCover: String
+  bookCoverMimeType: String
+  createdAt: DateTime!
+  description: String
+  detailTopic: DetailTopic
   id: Int!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Card {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Conversation {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 input CreateBookInput {
@@ -37,7 +54,42 @@ input CreateBookInput {
   topicDetailId: Int
 }
 
+input CreateCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateConversationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateDetailCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreateDetailTopicInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateLoanDetailInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateLoanInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateMessageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateOverduaWarningInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -47,9 +99,24 @@ input CreateTopicInput {
   exampleField: Int!
 }
 
-type DetailTopic {
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type DetailCard {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type DetailTopic {
+  books: [Book!]
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: Int!
+  name: String!
+  topic: Topic!
+  updatedAt: DateTime!
 }
 
 """
@@ -57,35 +124,88 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
+type Loan {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type LoanDetail {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Message {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Mutation {
   Logout(refreshToken: String!): AuthPayload!
   Regsiter(email: String!, firstname: String!, lastname: String!, password: String!): AuthRegisterDto!
   createBook(createBookInput: CreateBookInput!): Book!
+  createCard(createCardInput: CreateCardInput!): Card!
+  createConversation(createConversationInput: CreateConversationInput!): Conversation!
+  createDetailCard(createDetailCardInput: CreateDetailCardInput!): DetailCard!
   createDetailTopic(createDetailTopicInput: CreateDetailTopicInput!): DetailTopic!
+  createLoan(createLoanInput: CreateLoanInput!): Loan!
+  createLoanDetail(createLoanDetailInput: CreateLoanDetailInput!): LoanDetail!
+  createMessage(createMessageInput: CreateMessageInput!): Message!
+  createOverduaWarning(createOverduaWarningInput: CreateOverduaWarningInput!): OverduaWarning!
   createTopic(createTopicInput: CreateTopicInput!): Topic!
   generatetoken(email: String!, password: String!): AuthPayload!
   refreshAccessToken(refreshToken: String!): AuthPayload!
   removeBook(id: Int!): Book!
+  removeCard(id: Int!): Card!
+  removeConversation(id: Int!): Conversation!
+  removeDetailCard(id: Int!): DetailCard!
   removeDetailTopic(id: Int!): DetailTopic!
+  removeLoan(id: Int!): Loan!
+  removeLoanDetail(id: Int!): LoanDetail!
+  removeMessage(id: Int!): Message!
+  removeOverduaWarning(id: Int!): OverduaWarning!
   removeTopic(id: Int!): Topic!
   updateBook(updateBookInput: UpdateBookInput!): Book!
+  updateCard(updateCardInput: UpdateCardInput!): Card!
+  updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
+  updateDetailCard(updateDetailCardInput: UpdateDetailCardInput!): DetailCard!
   updateDetailTopic(updateDetailTopicInput: UpdateDetailTopicInput!): DetailTopic!
+  updateLoan(updateLoanInput: UpdateLoanInput!): Loan!
+  updateLoanDetail(updateLoanDetailInput: UpdateLoanDetailInput!): LoanDetail!
+  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
+  updateOverduaWarning(updateOverduaWarningInput: UpdateOverduaWarningInput!): OverduaWarning!
   updateTopic(updateTopicInput: UpdateTopicInput!): Topic!
+}
+
+type OverduaWarning {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 type Query {
   book(id: Int!): Book!
   books: [Book!]!
+  card(id: Int!): Card!
+  conversation(id: Int!): Conversation!
+  conversations: [Conversation!]!
+  detailCard(id: Int!): DetailCard!
   detailTopic(id: Int!): DetailTopic!
   detailTopics: [DetailTopic!]!
   hello: String!
+  loan(id: Int!): Loan!
+  loanDetail(id: Int!): LoanDetail!
+  message(id: Int!): Message!
+  overduaWarning(id: Int!): OverduaWarning!
   topic(id: Int!): Topic!
   topics: [Topic!]!
 }
 
 type Topic {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  detailTopics: [DetailTopic!]!
+  id: Int!
+  topicName: String!
+  updatedAt: DateTime!
 }
 
 input UpdateBookInput {
@@ -111,7 +231,49 @@ input UpdateBookInput {
   topicDetailId: Int
 }
 
+input UpdateCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateConversationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateDetailCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
 input UpdateDetailTopicInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateLoanDetailInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateLoanInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateMessageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateOverduaWarningInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
