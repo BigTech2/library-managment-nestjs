@@ -24,6 +24,23 @@ type Book {
   updatedAt: DateTime!
 }
 
+type BooksPaginationResult {
+  """Whether there are more items to fetch"""
+  hasMore: Boolean!
+
+  """List of books"""
+  items: [Book!]!
+
+  """Number of items per page/limit"""
+  limit: Int!
+
+  """Number of items skipped/offset"""
+  offset: Int!
+
+  """Total number of books matching the criteria"""
+  total: Int!
+}
+
 type Card {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -181,6 +198,23 @@ type OverduaWarning {
   exampleField: Int!
 }
 
+input PaginationBookInput {
+  """Search by book author"""
+  author: String
+
+  """Number of items to take"""
+  limit: Int! = 10
+
+  """Number of items to skip"""
+  offset: Int! = 0
+
+  """Search by book title"""
+  title: String
+
+  """Filter by topic detail ID"""
+  topicDetailId: Int
+}
+
 type Query {
   book(id: Int!): Book!
   books: [Book!]!
@@ -195,6 +229,7 @@ type Query {
   loanDetail(id: Int!): LoanDetail!
   message(id: Int!): Message!
   overduaWarning(id: Int!): OverduaWarning!
+  paginatedBooks(paginationInput: PaginationBookInput): BooksPaginationResult!
   topic(id: Int!): Topic!
   topics: [Topic!]!
 }

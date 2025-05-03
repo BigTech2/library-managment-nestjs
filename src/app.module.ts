@@ -23,6 +23,9 @@ import { LoanDetailModule } from './loan-detail/loan-detail.module';
 import { OverduaWarningModule } from './overdua-warning/overdua-warning.module';
 import { MessageModule } from './message/message.module';
 import { ConversationsModule } from './conversations/conversations.module';
+import { Book } from './books/entities/book.entity';
+import { DetailTopic } from './detail-topics/entities/detail-topic.entity';
+import { Topic } from './topics/entities/topic.entity';
 
 @Module({
   imports: [
@@ -36,7 +39,7 @@ import { ConversationsModule } from './conversations/conversations.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Role, RefreshToken],
+      entities: [User, Role, RefreshToken,Book,DetailTopic,Topic],
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({

@@ -31,7 +31,7 @@ export class Book {
 
   @Field(() => DetailTopic, { nullable: true })
   @ManyToOne(() => DetailTopic, (detailTopic) => detailTopic.books)
-  detailTopic: DetailTopic;
+  detailTopic: DetailTopic | null;
 
   @Field()
   @CreateDateColumn()
