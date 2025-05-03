@@ -12,6 +12,46 @@ type AuthRegisterDto {
   message: String
 }
 
+type Book {
+  """Book unique identifier"""
+  id: Int!
+}
+
+input CreateBookInput {
+  """Book author"""
+  author: String!
+
+  """Book cover image path"""
+  bookCover: String
+
+  """Book cover mime type"""
+  bookCoverMimeType: String
+
+  """Book description"""
+  description: String
+
+  """Book title"""
+  title: String!
+
+  """Topic detail ID"""
+  topicDetailId: Int
+}
+
+input CreateDetailTopicInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateTopicInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type DetailTopic {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -20,10 +60,65 @@ scalar JSON
 type Mutation {
   Logout(refreshToken: String!): AuthPayload!
   Regsiter(email: String!, firstname: String!, lastname: String!, password: String!): AuthRegisterDto!
+  createBook(createBookInput: CreateBookInput!): Book!
+  createDetailTopic(createDetailTopicInput: CreateDetailTopicInput!): DetailTopic!
+  createTopic(createTopicInput: CreateTopicInput!): Topic!
   generatetoken(email: String!, password: String!): AuthPayload!
   refreshAccessToken(refreshToken: String!): AuthPayload!
+  removeBook(id: Int!): Book!
+  removeDetailTopic(id: Int!): DetailTopic!
+  removeTopic(id: Int!): Topic!
+  updateBook(updateBookInput: UpdateBookInput!): Book!
+  updateDetailTopic(updateDetailTopicInput: UpdateDetailTopicInput!): DetailTopic!
+  updateTopic(updateTopicInput: UpdateTopicInput!): Topic!
 }
 
 type Query {
+  book(id: Int!): Book!
+  books: [Book!]!
+  detailTopic(id: Int!): DetailTopic!
+  detailTopics: [DetailTopic!]!
   hello: String!
+  topic(id: Int!): Topic!
+  topics: [Topic!]!
+}
+
+type Topic {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateBookInput {
+  """Book author"""
+  author: String
+
+  """Book cover image path"""
+  bookCover: String
+
+  """Book cover mime type"""
+  bookCoverMimeType: String
+
+  """Book description"""
+  description: String
+
+  """Book ID to update"""
+  id: Int!
+
+  """Book title"""
+  title: String
+
+  """Topic detail ID"""
+  topicDetailId: Int
+}
+
+input UpdateDetailTopicInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateTopicInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
