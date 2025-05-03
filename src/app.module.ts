@@ -13,6 +13,16 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { User } from './user/entities/user.entity';
+import { BooksModule } from './books/books.module';
+import { DetailTopicsModule } from './detail-topics/detail-topics.module';
+import { TopicsModule } from './topics/topics.module';
+import { CardModule } from './card/card.module';
+import { DetailCardModule } from './detail-card/detail-card.module';
+import { LoanModule } from './loan/loan.module';
+import { LoanDetailModule } from './loan-detail/loan-detail.module';
+import { OverduaWarningModule } from './overdua-warning/overdua-warning.module';
+import { MessageModule } from './message/message.module';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -39,6 +49,16 @@ import { User } from './user/entities/user.entity';
     RoleModule,
     RefreshTokenModule,
     AuthenModule,
+    BooksModule,
+    DetailTopicsModule,
+    TopicsModule,
+    CardModule,
+    DetailCardModule,
+    LoanModule,
+    LoanDetailModule,
+    OverduaWarningModule,
+    MessageModule,
+    ConversationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
