@@ -25,7 +25,7 @@ export class TopicsResolver {
 
   @Mutation(() => Topic)
   updateTopic(@Args('updateTopicInput') updateTopicInput: UpdateTopicInput) {
-    return this.topicsService.update(updateTopicInput.id, updateTopicInput);
+    return this.topicsService.update(updateTopicInput);
   }
 
   @Mutation(() => Topic)

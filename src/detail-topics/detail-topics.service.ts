@@ -86,7 +86,7 @@ export class DetailTopicsService {
     }
   }
   async remove(id: number): Promise<DetailTopic> {
-    console.log(id)
+  
     try {
       const detailTopic = await this.findOne(id);
       if (detailTopic) {
