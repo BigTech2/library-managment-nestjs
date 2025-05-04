@@ -5,7 +5,6 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, Up
 @ObjectType()
 @Entity('topics')
 export class Topic {
-
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;

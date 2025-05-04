@@ -114,8 +114,8 @@ input CreateOverduaWarningInput {
 }
 
 input CreateTopicInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Topic name)"""
+  topicName: String!
 }
 
 """
@@ -320,7 +320,8 @@ input UpdateOverduaWarningInput {
 }
 
 input UpdateTopicInput {
-  """Example field (placeholder)"""
-  exampleField: Int
   id: Int!
+
+  """Topic name)"""
+  topicName: String
 }

@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateTopicInput } from './dto/create-topic.input';
 import { UpdateTopicInput } from './dto/update-topic.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Topic } from './entities/topic.entity';
 import { Repository } from 'typeorm';
+import { Sign } from 'crypto';
 
 @Injectable()
 export class TopicsService {
@@ -11,36 +12,74 @@ export class TopicsService {
 
   constructor(
     @InjectRepository(Topic)
-    private readonly topicRepository : Repository<Topic>  
+    private readonly topicRepository: Repository<Topic>
 
-  ){}
+  ) { }
 
 
-  create(createTopicInput: CreateTopicInput) {
-    return 'This action adds a new topic';
+  async create(createTopicInput: CreateTopicInput): Promise<Topic> {
+    try {
+
+      const createTopic = this.topicRepository.create(createTopicInput)
+      return await this.topicRepository.save(createTopic);
+
+    } catch (error) {
+
+      throw new Error('Failded to create Topic')
+
+    }
   }
 
-  findAll() {
-    return `This action returns all topics`;
+  async findAll(): Promise<Topic[]> {
+    const topics = await this.topicRepository.find()
+    if (topics.length === 0) {
+      throw new NotFoundException('No topics found');
+    }
+
+    return topics;
   }
 
- async findOne(id: number) : Promise<Topic> {
+  async findOne(id: number): Promise<Topic> {
 
-      const topic = await this.topicRepository.findOne({
-        where: {id},
-      })
-      if(!topic){
-        throw new NotFoundException(`Topic with ID ${id} not found`); 
-      }
+    const topic = await this.topicRepository.findOne({
+      where: { id },
+    })
+    if (!topic) {
+      throw new NotFoundException(`Topic with ID ${id} not found`);
+    }
+
+    return topic;
+  }
+
+  async update( updateTopicInput: UpdateTopicInput) : Promise<Topic> {
     
-    return topic ;
+        const {id, ...topicData } = updateTopicInput
+    try {
+      const topic = await this.findOne(id)
+      if(topic){
+        Object.assign(topic, topicData)
+      } 
+      return this.topicRepository.save(topic)
+    } catch (error) {
+      throw new Error(`Failed to update Topic: ${error.message}`)
+    }
+  
   }
 
-  update(id: number, updateTopicInput: UpdateTopicInput) {
-    return `This action updates a #${id} topic`;
-  }
+  async remove(id: number): Promise<Topic> {
+    const topic = await this.findOne(id); // ✅ await the async method
 
-  remove(id: number) {
-    return `This action removes a #${id} topic`;
+    if (!topic) {
+      throw new NotFoundException(`Topic with ID ${id} not found`);
+    }
+
+    try {
+      await this.topicRepository.softDelete(id);
+      topic.deletedAt = new Date(); // optional: update for return
+
+      return topic;
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to delete Topic: ${error.message}`);
+    }
   }
 }
