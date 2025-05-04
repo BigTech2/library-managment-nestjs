@@ -20,7 +20,7 @@ export class DetailTopic {
 
   @Field(() => Topic)
   @ManyToOne(() => Topic, (topic) => topic.detailTopics)
-  topic: Topic;
+  topic: Topic | null;
 
   @Field()
   @CreateDateColumn()
