@@ -87,8 +87,10 @@ input CreateDetailCardInput {
 }
 
 input CreateDetailTopicInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+
+  """Topic ID"""
+  topicId: Int
 }
 
 input CreateLoanDetailInput {
@@ -285,9 +287,12 @@ input UpdateDetailCardInput {
 }
 
 input UpdateDetailTopicInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  """Id to update"""
   id: Int!
+  name: String
+
+  """Topic ID"""
+  topicId: Int
 }
 
 input UpdateLoanDetailInput {
