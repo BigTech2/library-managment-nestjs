@@ -15,7 +15,7 @@ export class TopicsService {
     private readonly topicRepository: Repository<Topic>
 
   ) { }
-
+sdsdss
 
   async create(createTopicInput: CreateTopicInput): Promise<Topic> {
     try {
@@ -43,6 +43,7 @@ export class TopicsService {
 
     const topic = await this.topicRepository.findOne({
       where: { id },
+      relations: ['detailTopics']
     })
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);
