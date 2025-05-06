@@ -24,6 +24,11 @@ export class AuthenResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ): Promise<{ message: string; data: any }> {
+
+
+
+    console.log("email: ",email)
+    
     const result = await this.authenService.generateToken(email, password);
     return {
       message: 'Login successful',

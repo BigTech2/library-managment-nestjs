@@ -43,6 +43,7 @@ sdsdss
 
     const topic = await this.topicRepository.findOne({
       where: { id },
+      relations: ['detailTopics']
     })
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);
