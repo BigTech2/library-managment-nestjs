@@ -27,8 +27,8 @@ export class Book {
   @Column({ type: 'varchar', length: 255 })
   author: string;
 
-  @Field({ nullable: true })
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Field({nullable: true })
+  @Column({ type: 'longtext', nullable: true })
   bookCover: string;
 
   @Field({ nullable: true })

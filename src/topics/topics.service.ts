@@ -38,7 +38,8 @@ export class TopicsService {
   async findOne(id: number): Promise<Topic> {
     const topic = await this.topicRepository.findOne({
       where: { id },
-    });
+      relations: ['detailTopics']
+    })
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);
     }
