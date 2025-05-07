@@ -5,8 +5,8 @@ import { Topic } from './entities/topic.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Topic])],
+  imports: [TypeOrmModule.forFeature([Topic])],
   providers: [TopicsResolver, TopicsService],
-  exports:[TopicsService]
+  exports: [TopicsService],
 })
 export class TopicsModule {}

@@ -10,6 +10,8 @@ import { AuthenResolver } from './authen.resolver';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { User } from 'src/user/entities/user.entity';
+import { GqlAuthGuard } from './guard/auth.guard';
+import { RoleGuard } from './guard/role.guard';
 
 @Module({
   imports: [
@@ -17,7 +19,14 @@ import { User } from 'src/user/entities/user.entity';
     JwtModule.register({}),
     TypeOrmModule.forFeature([User, RefreshToken, Role]),
   ],
-  providers: [AuthenService, AuthenResolver, JwtStrategy],
+  providers: [
+    AuthenService,
+    AuthenResolver,
+    JwtStrategy,
+    GqlAuthGuard,
+    RoleGuard,
+  ],
   controllers: [AuthenController],
+  exports: [GqlAuthGuard, RoleGuard],
 })
 export class AuthenModule {}

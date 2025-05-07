@@ -3,6 +3,8 @@ import { ManyToOne } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Role } from 'src/role/role.entity';
 import { RefreshToken } from 'src/refresh-token/refresh-token.entity';
+import { Loan } from 'src/loan/entities/loan.entity';
+import { Card } from 'src/card/entities/card.entity';
 
 @ObjectType()
 @Entity('users')
@@ -34,4 +36,12 @@ export class User {
   @Field(() => [RefreshToken])
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshTokens: RefreshToken[];
+
+  @Field(() => [Loan])
+  @OneToMany(() => Loan, (loan) => loan.user_id)
+  loans: Loan[];
+
+  @Field(() => [Card])
+  @OneToMany(() => Card, (card) => card.user)
+  cards: Card[];
 }

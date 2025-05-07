@@ -14,8 +14,8 @@ export class BooksService {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
-    private readonly detailBookService: DetailTopicsService
-  ) { }
+    private readonly detailBookService: DetailTopicsService,
+  ) {}
 
   async create(createBookInput: CreateBookInput): Promise<Book> {
     try {
@@ -26,7 +26,7 @@ export class BooksService {
 
       // If topicDetailId is provided, link the book to the detail topic
       if (topicDetailId) {
-        const detailTopic = await this.detailBookService.findOne(topicDetailId)
+        const detailTopic = await this.detailBookService.findOne(topicDetailId);
         if (!detailTopic) {
           throw new Error(`Detail topic with ID ${topicDetailId} not found`);
         }
@@ -43,8 +43,8 @@ export class BooksService {
   async findAll(): Promise<Book[]> {
     try {
       const books = await this.bookRepository.find({
-        relations: ['detailTopic','detailTopic.topic'],
-      }); 
+        relations: ['detailTopic', 'detailTopic.topic'],
+      });
       return books;
     } catch (error) {
       throw new Error(`Failed to get books: ${error.message}`);
@@ -52,12 +52,11 @@ export class BooksService {
   }
 
   async findOne(id: number): Promise<Book | null> {
-
     try {
       const book = await this.bookRepository.findOne({
-        where:{id},
-        relations: ['detailTopic','detailTopic.topic'],
-      }); 
+        where: { id },
+        relations: ['detailTopic', 'detailTopic.topic'],
+      });
       return book;
     } catch (error) {
       throw new Error(`Failed to get book: ${error.message}`);
@@ -71,7 +70,7 @@ export class BooksService {
       // Find existing book
       const book = await this.bookRepository.findOne({
         where: { id },
-        relations: ['detailTopic','detailTopic.topic']
+        relations: ['detailTopic', 'detailTopic.topic'],
       });
 
       if (!book) {
@@ -84,7 +83,8 @@ export class BooksService {
       // Update topic detail relation if provided
       if (topicDetailId !== undefined) {
         if (topicDetailId) {
-          const detailTopic = await this.detailBookService.findOne(topicDetailId);
+          const detailTopic =
+            await this.detailBookService.findOne(topicDetailId);
           if (!detailTopic) {
             throw new Error(`Detail topic with ID ${topicDetailId} not found`);
           }
@@ -104,11 +104,11 @@ export class BooksService {
   async remove(id: number): Promise<Book | null> {
     try {
       const book = await this.bookRepository.findOne({ where: { id } });
-  
+
       if (!book) {
         return null;
       }
-  
+
       await this.bookRepository.delete(id);
       return book; // ✅ Return the deleted book data
     } catch (error) {
@@ -116,43 +116,49 @@ export class BooksService {
     }
   }
 
-  async paginateBooks(paginationInput: PaginationBookInput): Promise<BooksPaginationResult> {
+  async paginateBooks(
+    paginationInput: PaginationBookInput,
+  ): Promise<BooksPaginationResult> {
     const { offset, limit, title, author, topicDetailId } = paginationInput;
-    
+
     // Build query with filters
-    const queryBuilder = this.bookRepository.createQueryBuilder('book')
+    const queryBuilder = this.bookRepository
+      .createQueryBuilder('book')
       .leftJoinAndSelect('book.detailTopic', 'detailTopic')
       .leftJoinAndSelect('detailTopic.topic', 'topic')
       .skip(offset)
       .take(limit);
-    
 
     // Apply filters if provided
     if (title) {
       queryBuilder.andWhere('book.title LIKE :title', { title: `%${title}%` });
     }
-    
+
     if (author) {
-      queryBuilder.andWhere('book.author LIKE :author', { author: `%${author}%` });
+      queryBuilder.andWhere('book.author LIKE :author', {
+        author: `%${author}%`,
+      });
     }
-    
+
     if (topicDetailId) {
-      queryBuilder.andWhere('detailTopic.id = :topicDetailId', { topicDetailId });
+      queryBuilder.andWhere('detailTopic.id = :topicDetailId', {
+        topicDetailId,
+      });
     }
-    
+
     // Get total count for pagination metadata
     const total = await queryBuilder.getCount();
-    
+
     // Get paginated results
     const items = await queryBuilder.getMany();
-    
+
     // Return formatted result
     return {
       items,
       total,
       offset,
       limit,
-      hasMore: offset + limit < total
+      hasMore: offset + limit < total,
     };
   }
 }

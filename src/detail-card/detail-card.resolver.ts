@@ -1,35 +1,46 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Int } from '@nestjs/graphql';
 import { DetailCardService } from './detail-card.service';
 import { DetailCard } from './entities/detail-card.entity';
-import { CreateDetailCardInput } from './dto/create-detail-card.input';
-import { UpdateDetailCardInput } from './dto/update-detail-card.input';
+import { DetailCardPayload } from './dto/detail-card-payload';
 
 @Resolver(() => DetailCard)
 export class DetailCardResolver {
   constructor(private readonly detailCardService: DetailCardService) {}
 
-  @Mutation(() => DetailCard)
-  createDetailCard(@Args('createDetailCardInput') createDetailCardInput: CreateDetailCardInput) {
-    return this.detailCardService.create(createDetailCardInput);
+  @Mutation(() => DetailCardPayload)
+  async createDetailCard(
+    @Args('card_id', { type: () => Int }) card_id: number,
+    @Args('book_id', { type: () => Int }) book_id: number,
+  ) {
+    const result = await this.detailCardService.createDetailCard(
+      card_id,
+      book_id,
+    );
+
+    if (!result.data) {
+      throw new Error(result.message);
+    }
+
+    return {
+      message: result.message,
+      data: result.data,
+    };
   }
 
-  @Query(() => [DetailCard], { name: 'detailCard' })
-  findAll() {
-    return this.detailCardService.findAll();
-  }
+  @Mutation(() => DetailCardPayload)
+  async deleteDetailCard(
+    @Args('detail_card_id', { type: () => Int }) detail_card_id: number,
+  ) {
+    const result =
+      await this.detailCardService.deleteDetailCard(detail_card_id);
 
-  @Query(() => DetailCard, { name: 'detailCard' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.detailCardService.findOne(id);
-  }
+    if (!result.data) {
+      throw new Error(result.message);
+    }
 
-  @Mutation(() => DetailCard)
-  updateDetailCard(@Args('updateDetailCardInput') updateDetailCardInput: UpdateDetailCardInput) {
-    return this.detailCardService.update(updateDetailCardInput.id, updateDetailCardInput);
-  }
-
-  @Mutation(() => DetailCard)
-  removeDetailCard(@Args('id', { type: () => Int }) id: number) {
-    return this.detailCardService.remove(id);
+    return {
+      message: result.message,
+      data: result.data,
+    };
   }
 }

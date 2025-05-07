@@ -9,7 +9,9 @@ export class LoanDetailResolver {
   constructor(private readonly loanDetailService: LoanDetailService) {}
 
   @Mutation(() => LoanDetail)
-  createLoanDetail(@Args('createLoanDetailInput') createLoanDetailInput: CreateLoanDetailInput) {
+  createLoanDetail(
+    @Args('createLoanDetailInput') createLoanDetailInput: CreateLoanDetailInput,
+  ) {
     return this.loanDetailService.create(createLoanDetailInput);
   }
 
@@ -24,8 +26,13 @@ export class LoanDetailResolver {
   }
 
   @Mutation(() => LoanDetail)
-  updateLoanDetail(@Args('updateLoanDetailInput') updateLoanDetailInput: UpdateLoanDetailInput) {
-    return this.loanDetailService.update(updateLoanDetailInput.id, updateLoanDetailInput);
+  updateLoanDetail(
+    @Args('updateLoanDetailInput') updateLoanDetailInput: UpdateLoanDetailInput,
+  ) {
+    return this.loanDetailService.update(
+      updateLoanDetailInput.id,
+      updateLoanDetailInput,
+    );
   }
 
   @Mutation(() => LoanDetail)

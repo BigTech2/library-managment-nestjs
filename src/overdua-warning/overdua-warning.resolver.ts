@@ -9,7 +9,10 @@ export class OverduaWarningResolver {
   constructor(private readonly overduaWarningService: OverduaWarningService) {}
 
   @Mutation(() => OverduaWarning)
-  createOverduaWarning(@Args('createOverduaWarningInput') createOverduaWarningInput: CreateOverduaWarningInput) {
+  createOverduaWarning(
+    @Args('createOverduaWarningInput')
+    createOverduaWarningInput: CreateOverduaWarningInput,
+  ) {
     return this.overduaWarningService.create(createOverduaWarningInput);
   }
 
@@ -24,8 +27,14 @@ export class OverduaWarningResolver {
   }
 
   @Mutation(() => OverduaWarning)
-  updateOverduaWarning(@Args('updateOverduaWarningInput') updateOverduaWarningInput: UpdateOverduaWarningInput) {
-    return this.overduaWarningService.update(updateOverduaWarningInput.id, updateOverduaWarningInput);
+  updateOverduaWarning(
+    @Args('updateOverduaWarningInput')
+    updateOverduaWarningInput: UpdateOverduaWarningInput,
+  ) {
+    return this.overduaWarningService.update(
+      updateOverduaWarningInput.id,
+      updateOverduaWarningInput,
+    );
   }
 
   @Mutation(() => OverduaWarning)

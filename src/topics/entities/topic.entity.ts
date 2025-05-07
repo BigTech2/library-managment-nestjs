@@ -1,6 +1,14 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { DetailTopic } from 'src/detail-topics/entities/detail-topic.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @ObjectType()
 @Entity('topics')
