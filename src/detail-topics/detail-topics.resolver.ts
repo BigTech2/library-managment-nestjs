@@ -9,7 +9,10 @@ export class DetailTopicsResolver {
   constructor(private readonly detailTopicsService: DetailTopicsService) {}
 
   @Mutation(() => DetailTopic)
-  createDetailTopic(@Args('createDetailTopicInput') createDetailTopicInput: CreateDetailTopicInput) {
+  createDetailTopic(
+    @Args('createDetailTopicInput')
+    createDetailTopicInput: CreateDetailTopicInput,
+  ) {
     return this.detailTopicsService.create(createDetailTopicInput);
   }
 
@@ -24,8 +27,14 @@ export class DetailTopicsResolver {
   }
 
   @Mutation(() => DetailTopic)
-  updateDetailTopic(@Args('updateDetailTopicInput') updateDetailTopicInput: UpdateDetailTopicInput) {
-    return this.detailTopicsService.update(updateDetailTopicInput.id, updateDetailTopicInput);
+  updateDetailTopic(
+    @Args('updateDetailTopicInput')
+    updateDetailTopicInput: UpdateDetailTopicInput,
+  ) {
+    return this.detailTopicsService.update(
+      updateDetailTopicInput.id,
+      updateDetailTopicInput,
+    );
   }
 
   @Mutation(() => DetailTopic)

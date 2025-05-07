@@ -26,6 +26,10 @@ import { ConversationsModule } from './conversations/conversations.module';
 import { Book } from './books/entities/book.entity';
 import { DetailTopic } from './detail-topics/entities/detail-topic.entity';
 import { Topic } from './topics/entities/topic.entity';
+import { Loan } from './loan/entities/loan.entity';
+import { Card } from './card/entities/card.entity';
+import { DetailCard } from './detail-card/entities/detail-card.entity';
+import { LoanDetail } from './loan-detail/entities/loan-detail.entity';
 
 @Module({
   imports: [
@@ -39,8 +43,19 @@ import { Topic } from './topics/entities/topic.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Role, RefreshToken,Book,DetailTopic,Topic],
-      synchronize: process.env.DB_SYNCHRONIZE === 'true',
+      entities: [
+        User,
+        Role,
+        RefreshToken,
+        Book,
+        DetailTopic,
+        Topic,
+        Loan,
+        Card,
+        DetailCard,
+        LoanDetail,
+      ],
+      synchronize: process.env.DB_SYNCHRONIZE == 'true',
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

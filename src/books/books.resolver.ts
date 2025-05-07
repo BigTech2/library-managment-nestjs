@@ -17,16 +17,18 @@ export class BooksResolver {
   @Mutation(() => Book)
   @UseGuards(GqlAuthGuard, RoleGuard)
   @role('ADMIN')
-  async createBook(@Args('createBookInput') createBookInput: CreateBookInput): Promise<Book> {
+  async createBook(
+    @Args('createBookInput') createBookInput: CreateBookInput,
+  ): Promise<Book> {
     try {
       return await this.booksService.create(createBookInput);
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       throw new Error(`Failed to create book: ${error.message}`);
     }
   }
 
   @Query(() => [Book], { name: 'books' })
-
   findAll() {
     return this.booksService.findAll();
   }
@@ -38,7 +40,8 @@ export class BooksResolver {
 
   @Query(() => BooksPaginationResult, { name: 'paginatedBooks' })
   async paginateBooks(
-    @Args('paginationInput', { nullable: true }) paginationInput?: PaginationBookInput,
+    @Args('paginationInput', { nullable: true })
+    paginationInput?: PaginationBookInput,
   ): Promise<BooksPaginationResult> {
     const pagination = paginationInput || { offset: 0, limit: 10 };
     return this.booksService.paginateBooks(pagination);

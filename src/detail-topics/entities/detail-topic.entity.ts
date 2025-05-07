@@ -1,14 +1,23 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Book } from 'src/books/entities/book.entity';
 import { Topic } from 'src/topics/entities/topic.entity';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @ObjectType()
-@Entity('detailTopics')
+@Entity()
 export class DetailTopic {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
-  id: number; 
+  id: number;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })

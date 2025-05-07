@@ -18,8 +18,10 @@ type Book {
   bookCoverMimeType: String
   createdAt: DateTime!
   description: String
+  detailCards: [DetailCard!]!
   detailTopic: DetailTopic
   id: Int!
+  loanDetails: [LoanDetail!]!
   title: String!
   updatedAt: DateTime!
 }
@@ -42,8 +44,18 @@ type BooksPaginationResult {
 }
 
 type Card {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  createdAt: DateTime!
+  detailCards: [DetailCard!]!
+  id: Int!
+  isLoaned: Boolean!
+  quantity: Int!
+  updatedAt: DateTime!
+  user: User!
+}
+
+type CardPayload {
+  data: JSON
+  message: String!
 }
 
 type Conversation {
@@ -71,17 +83,7 @@ input CreateBookInput {
   topicDetailId: Int
 }
 
-input CreateCardInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 input CreateConversationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input CreateDetailCardInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -94,11 +96,6 @@ input CreateDetailTopicInput {
 }
 
 input CreateLoanDetailInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input CreateLoanInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -124,8 +121,16 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type DetailCard {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  book: Book!
+  card: Card!
+  createdAt: DateTime!
+  id: Int!
+  quantity: Int!
+}
+
+type DetailCardPayload {
+  data: JSON
+  message: String!
 }
 
 type DetailTopic {
@@ -144,13 +149,25 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type Loan {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  brrowDate: DateTime!
+  id: Int!
+  loanDetails: [LoanDetail!]!
+  quantity: Int!
+  returnDate: DateTime!
+  status: StatusLoanBookEnum!
+  user_id: User!
 }
 
 type LoanDetail {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  book: Book!
+  createdAt: DateTime!
+  id: Int!
+  loan: Loan!
+}
+
+type LoanPayload {
+  Data: JSON
+  Message: String!
 }
 
 type Message {
@@ -162,34 +179,30 @@ type Mutation {
   Logout(refreshToken: String!): AuthPayload!
   Regsiter(email: String!, firstname: String!, lastname: String!, password: String!): AuthRegisterDto!
   createBook(createBookInput: CreateBookInput!): Book!
-  createCard(createCardInput: CreateCardInput!): Card!
+  createCard: CardPayload!
   createConversation(createConversationInput: CreateConversationInput!): Conversation!
-  createDetailCard(createDetailCardInput: CreateDetailCardInput!): DetailCard!
+  createDetailCard(book_id: Int!, card_id: Int!): DetailCardPayload!
   createDetailTopic(createDetailTopicInput: CreateDetailTopicInput!): DetailTopic!
-  createLoan(createLoanInput: CreateLoanInput!): Loan!
+  createLoan(card_id: Float!, returnDate: DateTime!): LoanPayload!
   createLoanDetail(createLoanDetailInput: CreateLoanDetailInput!): LoanDetail!
   createMessage(createMessageInput: CreateMessageInput!): Message!
   createOverduaWarning(createOverduaWarningInput: CreateOverduaWarningInput!): OverduaWarning!
   createTopic(createTopicInput: CreateTopicInput!): Topic!
+  deleteDetailCard(detail_card_id: Int!): DetailCardPayload!
   generatetoken(email: String!, password: String!): AuthPayload!
   refreshAccessToken(refreshToken: String!): AuthPayload!
   removeBook(id: Int!): Book!
-  removeCard(id: Int!): Card!
   removeConversation(id: Int!): Conversation!
-  removeDetailCard(id: Int!): DetailCard!
   removeDetailTopic(id: Int!): DetailTopic!
-  removeLoan(id: Int!): Loan!
   removeLoanDetail(id: Int!): LoanDetail!
   removeMessage(id: Int!): Message!
   removeOverduaWarning(id: Int!): OverduaWarning!
   removeTopic(id: Int!): Topic!
   updateBook(updateBookInput: UpdateBookInput!): Book!
-  updateCard(updateCardInput: UpdateCardInput!): Card!
   updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
-  updateDetailCard(updateDetailCardInput: UpdateDetailCardInput!): DetailCard!
   updateDetailTopic(updateDetailTopicInput: UpdateDetailTopicInput!): DetailTopic!
-  updateLoan(updateLoanInput: UpdateLoanInput!): Loan!
   updateLoanDetail(updateLoanDetailInput: UpdateLoanDetailInput!): LoanDetail!
+  updateLoanStatus(loan_id: Float!, status: Float!): LoanPayload!
   updateMessage(updateMessageInput: UpdateMessageInput!): Message!
   updateOverduaWarning(updateOverduaWarningInput: UpdateOverduaWarningInput!): OverduaWarning!
   updateTopic(updateTopicInput: UpdateTopicInput!): Topic!
@@ -220,20 +233,48 @@ input PaginationBookInput {
 type Query {
   book(id: Int!): Book!
   books: [Book!]!
-  card(id: Int!): Card!
   conversation(id: Int!): Conversation!
   conversations: [Conversation!]!
-  detailCard(id: Int!): DetailCard!
   detailTopic(id: Int!): DetailTopic!
   detailTopics: [DetailTopic!]!
+  findLoanOnlyForUser(id: Float!): LoanPayload!
+  findLoansForUser: LoanPayload!
+  getCard: getCardOutput!
   hello: String!
-  loan(id: Int!): Loan!
+  loan: LoanPayload!
   loanDetail(id: Int!): LoanDetail!
   message(id: Int!): Message!
   overduaWarning(id: Int!): OverduaWarning!
   paginatedBooks(paginationInput: PaginationBookInput): BooksPaginationResult!
   topic(id: Int!): Topic!
   topics: [Topic!]!
+}
+
+type RefreshToken {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: String!
+  token: String!
+  user: User!
+}
+
+type Role {
+  id: Int!
+  name: RoleName!
+  users: [User!]!
+}
+
+"""The role of the user"""
+enum RoleName {
+  ADMIN
+  USER
+}
+
+"""The status of a loaned book"""
+enum StatusLoanBookEnum {
+  DELAY
+  LOANING
+  RETURNED
 }
 
 type Topic {
@@ -268,19 +309,7 @@ input UpdateBookInput {
   topicDetailId: Int
 }
 
-input UpdateCardInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
 input UpdateConversationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input UpdateDetailCardInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
@@ -296,12 +325,6 @@ input UpdateDetailTopicInput {
 }
 
 input UpdateLoanDetailInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input UpdateLoanInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
@@ -324,4 +347,21 @@ input UpdateTopicInput {
 
   """Topic name)"""
   topicName: String
+}
+
+type User {
+  cards: [Card!]!
+  email: String
+  firstname: String
+  id: Int!
+  lastname: String
+  loans: [Loan!]!
+  password: String
+  refreshTokens: [RefreshToken!]!
+  role: Role
+}
+
+type getCardOutput {
+  data: [Card!]
+  message: String!
 }
