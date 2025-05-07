@@ -22,7 +22,6 @@ import { LoanModule } from './loan/loan.module';
 import { LoanDetailModule } from './loan-detail/loan-detail.module';
 import { OverduaWarningModule } from './overdua-warning/overdua-warning.module';
 import { MessageModule } from './message/message.module';
-import { ConversationsModule } from './conversations/conversations.module';
 import { Book } from './books/entities/book.entity';
 import { DetailTopic } from './detail-topics/entities/detail-topic.entity';
 import { Topic } from './topics/entities/topic.entity';
@@ -30,6 +29,7 @@ import { Loan } from './loan/entities/loan.entity';
 import { Card } from './card/entities/card.entity';
 import { DetailCard } from './detail-card/entities/detail-card.entity';
 import { LoanDetail } from './loan-detail/entities/loan-detail.entity';
+import { Message } from './message/entities/message.entity';
 
 @Module({
   imports: [
@@ -54,6 +54,7 @@ import { LoanDetail } from './loan-detail/entities/loan-detail.entity';
         Card,
         DetailCard,
         LoanDetail,
+        Message
       ],
       synchronize: process.env.DB_SYNCHRONIZE == 'true',
     }),
@@ -76,7 +77,7 @@ import { LoanDetail } from './loan-detail/entities/loan-detail.entity';
     LoanDetailModule,
     OverduaWarningModule,
     MessageModule,
-    ConversationsModule,
+   
   ],
   controllers: [AppController],
   providers: [AppService],

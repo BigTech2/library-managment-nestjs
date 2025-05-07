@@ -58,11 +58,6 @@ type CardPayload {
   message: String!
 }
 
-type Conversation {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 input CreateBookInput {
   """Book author"""
   author: String!
@@ -83,11 +78,6 @@ input CreateBookInput {
   topicDetailId: Int
 }
 
-input CreateConversationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 input CreateDetailTopicInput {
   name: String!
 
@@ -96,11 +86,6 @@ input CreateDetailTopicInput {
 }
 
 input CreateLoanDetailInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input CreateMessageInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -170,40 +155,29 @@ type LoanPayload {
   Message: String!
 }
 
-type Message {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Mutation {
   Logout(refreshToken: String!): AuthPayload!
   Regsiter(email: String!, firstname: String!, lastname: String!, password: String!): AuthRegisterDto!
   createBook(createBookInput: CreateBookInput!): Book!
   createCard: CardPayload!
-  createConversation(createConversationInput: CreateConversationInput!): Conversation!
   createDetailCard(book_id: Int!, card_id: Int!): DetailCardPayload!
   createDetailTopic(createDetailTopicInput: CreateDetailTopicInput!): DetailTopic!
   createLoan(card_id: Float!, returnDate: DateTime!): LoanPayload!
   createLoanDetail(createLoanDetailInput: CreateLoanDetailInput!): LoanDetail!
-  createMessage(createMessageInput: CreateMessageInput!): Message!
   createOverduaWarning(createOverduaWarningInput: CreateOverduaWarningInput!): OverduaWarning!
   createTopic(createTopicInput: CreateTopicInput!): Topic!
   deleteDetailCard(detail_card_id: Int!): DetailCardPayload!
   generatetoken(email: String!, password: String!): AuthPayload!
   refreshAccessToken(refreshToken: String!): AuthPayload!
   removeBook(id: Int!): Book!
-  removeConversation(id: Int!): Conversation!
   removeDetailTopic(id: Int!): DetailTopic!
   removeLoanDetail(id: Int!): LoanDetail!
-  removeMessage(id: Int!): Message!
   removeOverduaWarning(id: Int!): OverduaWarning!
   removeTopic(id: Int!): Topic!
   updateBook(updateBookInput: UpdateBookInput!): Book!
-  updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
   updateDetailTopic(updateDetailTopicInput: UpdateDetailTopicInput!): DetailTopic!
   updateLoanDetail(updateLoanDetailInput: UpdateLoanDetailInput!): LoanDetail!
   updateLoanStatus(loan_id: Float!, status: Float!): LoanPayload!
-  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
   updateOverduaWarning(updateOverduaWarningInput: UpdateOverduaWarningInput!): OverduaWarning!
   updateTopic(updateTopicInput: UpdateTopicInput!): Topic!
 }
@@ -233,8 +207,6 @@ input PaginationBookInput {
 type Query {
   book(id: Int!): Book!
   books: [Book!]!
-  conversation(id: Int!): Conversation!
-  conversations: [Conversation!]!
   detailTopic(id: Int!): DetailTopic!
   detailTopics: [DetailTopic!]!
   findLoanOnlyForUser(id: Float!): LoanPayload!
@@ -243,7 +215,6 @@ type Query {
   hello: String!
   loan: LoanPayload!
   loanDetail(id: Int!): LoanDetail!
-  message(id: Int!): Message!
   overduaWarning(id: Int!): OverduaWarning!
   paginatedBooks(paginationInput: PaginationBookInput): BooksPaginationResult!
   topic(id: Int!): Topic!
@@ -309,12 +280,6 @@ input UpdateBookInput {
   topicDetailId: Int
 }
 
-input UpdateConversationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
 input UpdateDetailTopicInput {
   """Id to update"""
   id: Int!
@@ -325,12 +290,6 @@ input UpdateDetailTopicInput {
 }
 
 input UpdateLoanDetailInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input UpdateMessageInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
