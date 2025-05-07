@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDetailTopicInput } from './dto/create-detail-topic.input';
@@ -11,26 +15,25 @@ export class DetailTopicsService {
   constructor(
     @InjectRepository(DetailTopic)
     private readonly detailTopicRepository: Repository<DetailTopic>,
-    private readonly topicsService: TopicsService
-  ) { }
+    private readonly topicsService: TopicsService,
+  ) {}
 
-  async create(createDetailTopicInput: CreateDetailTopicInput): Promise<DetailTopic> {
-
-
-
+  async create(
+    createDetailTopicInput: CreateDetailTopicInput,
+  ): Promise<DetailTopic> {
     try {
       const { topicId, ...detailTopics } = createDetailTopicInput;
-      const detailTopic = this.detailTopicRepository.create(detailTopics)
+      const detailTopic = this.detailTopicRepository.create(detailTopics);
 
       if (topicId) {
-        const topic = await this.topicsService.findOne(topicId)
+        const topic = await this.topicsService.findOne(topicId);
 
         if (!topic) {
           throw new Error(`Detail topic with ID ${topicId} not found`);
         }
-        detailTopic.topic = topic
+        detailTopic.topic = topic;
       }
-      return this.detailTopicRepository.save(detailTopic)
+      return this.detailTopicRepository.save(detailTopic);
     } catch (error) {
       throw new Error(`Failed to create book: ${error.message}`);
     }
@@ -38,14 +41,12 @@ export class DetailTopicsService {
 
   async findAll(): Promise<DetailTopic[]> {
     try {
-      const detailTopics = this.detailTopicRepository.find(
-        {
-          relations: ['topic', 'books']
-        }
-      )
-      return detailTopics
+      const detailTopics = this.detailTopicRepository.find({
+        relations: ['topic', 'books'],
+      });
+      return detailTopics;
     } catch (error) {
-      throw new Error(`Failded to get detailTopics ${error.message} `)
+      throw new Error(`Failded to get detailTopics ${error.message} `);
     }
   }
 
@@ -62,40 +63,43 @@ export class DetailTopicsService {
     return detailTopic;
   }
 
-  async update(id: number, updateDetailTopicInput: UpdateDetailTopicInput): Promise<DetailTopic> {
+  async update(
+    id: number,
+    updateDetailTopicInput: UpdateDetailTopicInput,
+  ): Promise<DetailTopic> {
     try {
-      const {id, topicId, ...detailTopics}  = updateDetailTopicInput;
+      const { id, topicId, ...detailTopics } = updateDetailTopicInput;
 
       const detailTopic = await this.findOne(id);
       Object.assign(detailTopic, detailTopics);
 
-      if(topicId !== undefined){
+      if (topicId !== undefined) {
         if (topicId) {
-          const topic = await this.topicsService.findOne(topicId)
-          if(topic){
-            detailTopic.topic = topic
-          }else{
-            detailTopic.topic = null
+          const topic = await this.topicsService.findOne(topicId);
+          if (topic) {
+            detailTopic.topic = topic;
+          } else {
+            detailTopic.topic = null;
           }
         }
       }
-      return await this.detailTopicRepository.save(detailTopic)
-
+      return await this.detailTopicRepository.save(detailTopic);
     } catch (error) {
-      throw new Error(`Failed to update detailTopic: ${error.message}`)
+      throw new Error(`Failed to update detailTopic: ${error.message}`);
     }
   }
   async remove(id: number): Promise<DetailTopic> {
-  
     try {
       const detailTopic = await this.findOne(id);
       if (detailTopic) {
-        await this.detailTopicRepository.softDelete(id); 
+        await this.detailTopicRepository.softDelete(id);
         detailTopic.deletedAt = new Date();
       }
       return detailTopic;
     } catch (error) {
-      throw new InternalServerErrorException(`Failed to delete detailTopics: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Failed to delete detailTopics: ${error.message}`,
+      );
     }
   }
 }

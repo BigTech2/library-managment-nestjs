@@ -15,7 +15,6 @@ export class AuthenResolver {
   @role('ADMIN')
   @Query(() => String)
   hello() {
-
     return 'Hello world';
   }
 

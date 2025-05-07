@@ -7,6 +7,4 @@ export class CreateDetailTopicInput {
 
   @Field(() => Int, { description: 'Topic ID', nullable: true })
   topicId?: number;
-
-
 }
