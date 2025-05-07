@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +9,12 @@ import * as dotenv from 'dotenv';
 import * as crypto from 'crypto';
 import { Role, RoleName } from 'src/role/role.entity';
 import { User } from 'src/user/entities/user.entity';
+import { ResetPasswordToken } from './entities/reset-password.entity';
+import { ForgetPasswordInput } from './dto/forget-password.input';
+import { ResetPasswordInput } from './dto/reset-password.input';
+import { MailService } from 'src/mail/mail.service';
+import { v4 as uuidv4 } from 'uuid';
+import { UserService } from 'src/user/user.service';
 
 dotenv.config();
 @Injectable()
@@ -22,6 +28,10 @@ export class AuthenService {
     private readonly refreshTokenRepository: Repository<RefreshToken>,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    @InjectRepository(ResetPasswordToken)
+    private resetTokenRepository: Repository<ResetPasswordToken>,
+    private userService: UserService,
+    private mailService: MailService,
   ) {
     this.jwtSecret = process.env.SECRET_KEY || ''; // Lấy secret từ biến môi trường
     if (!this.jwtSecret) {
@@ -178,5 +188,59 @@ export class AuthenService {
       email: user.email,
       role: user.role.name,
     };
+  }
+
+  async forgotPassword(input: ForgetPasswordInput): Promise<boolean> {
+    const user = await this.userRepository.findOne({
+      where: { email: input.email },
+    });
+
+    if (!user) {
+      // Don't reveal if email exists or not for security
+      return true;
+    }
+
+    // Generate reset token
+    const token = uuidv4();
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1); // Token expires in 1 hour
+
+    // Save reset token
+    const resetToken = this.resetTokenRepository.create({
+      token,
+      user,
+      expiresAt,
+    });
+    await this.resetTokenRepository.save(resetToken);
+
+    // Send reset password email with full name
+    const fullName = `${user.firstname} ${user.lastname}`;
+    await this.mailService.sendResetPasswordEmail(user.email, fullName, token);
+
+    return true;
+  }
+
+  async resetPassword(input: ResetPasswordInput): Promise<boolean> {
+    const resetToken = await this.resetTokenRepository.findOne({
+      where: { token: input.token },
+      relations: ['user'],
+    });
+
+    if (!resetToken || resetToken.expiresAt < new Date()) {
+      throw new UnauthorizedException('Invalid or expired reset token');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(input.newPassword, 10);
+
+    // Update user password
+    await this.userRepository.update(resetToken.user.id, {
+      password: hashedPassword,
+    });
+
+    // Delete used token
+    await this.resetTokenRepository.remove(resetToken);
+
+    return true;
   }
 }

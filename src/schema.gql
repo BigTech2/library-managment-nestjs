@@ -143,6 +143,10 @@ type DetailTopic {
   updatedAt: DateTime!
 }
 
+input ForgetPasswordInput {
+  email: String!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -189,6 +193,7 @@ type Mutation {
   createOverduaWarning(createOverduaWarningInput: CreateOverduaWarningInput!): OverduaWarning!
   createTopic(createTopicInput: CreateTopicInput!): Topic!
   deleteDetailCard(detail_card_id: Int!): DetailCardPayload!
+  forgotPassword(input: ForgetPasswordInput!): Boolean!
   generatetoken(email: String!, password: String!): AuthPayload!
   refreshAccessToken(refreshToken: String!): AuthPayload!
   removeBook(id: Int!): Book!
@@ -198,6 +203,7 @@ type Mutation {
   removeMessage(id: Int!): Message!
   removeOverduaWarning(id: Int!): OverduaWarning!
   removeTopic(id: Int!): Topic!
+  resetPassword(input: ResetPasswordInput!): Boolean!
   updateBook(updateBookInput: UpdateBookInput!): Book!
   updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
   updateDetailTopic(updateDetailTopicInput: UpdateDetailTopicInput!): DetailTopic!
@@ -256,6 +262,11 @@ type RefreshToken {
   id: String!
   token: String!
   user: User!
+}
+
+input ResetPasswordInput {
+  newPassword: String!
+  token: String!
 }
 
 type Role {

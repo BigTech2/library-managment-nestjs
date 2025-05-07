@@ -30,6 +30,7 @@ import { Loan } from './loan/entities/loan.entity';
 import { Card } from './card/entities/card.entity';
 import { DetailCard } from './detail-card/entities/detail-card.entity';
 import { LoanDetail } from './loan-detail/entities/loan-detail.entity';
+import { ResetPasswordToken } from './auth/entities/reset-password.entity';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { LoanDetail } from './loan-detail/entities/loan-detail.entity';
         Card,
         DetailCard,
         LoanDetail,
+        ResetPasswordToken,
       ],
       synchronize: process.env.DB_SYNCHRONIZE == 'true',
     }),

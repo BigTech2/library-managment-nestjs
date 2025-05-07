@@ -6,6 +6,8 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './guard/auth.guard';
 import { RoleGuard } from './guard/role.guard';
 import { role } from './role.decorator';
+import { ForgetPasswordInput } from './dto/forget-password.input';
+import { ResetPasswordInput } from './dto/reset-password.input';
 
 @Resolver()
 export class AuthenResolver {
@@ -74,5 +76,15 @@ export class AuthenResolver {
       message: 'Logout successfully!!!',
       data: result,
     };
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(@Args('input') input: ForgetPasswordInput): Promise<boolean> {
+    return this.authenService.forgotPassword(input);
+  }
+
+  @Mutation(() => Boolean)
+  async resetPassword(@Args('input') input: ResetPasswordInput): Promise<boolean> {
+    return this.authenService.resetPassword(input);
   }
 }

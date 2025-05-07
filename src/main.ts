@@ -5,7 +5,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:5173'], // Specify your React app's origin
+    origin: ['http://localhost:5173','http://localhost:3001'], // Specify your React app's origin
     credentials: true, // Allow credentials to be sent
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow methods needed for GraphQL
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
